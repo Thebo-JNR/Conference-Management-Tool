@@ -37,6 +37,15 @@ class ConferenceSuggestionsTest extends TestCase
             ->assertUnprocessable();
     }
 
+    public function test_it_returns_no_results_for_unmatched_titles(): void
+    {
+        Conference::factory()->create(['name' => 'Robotics Symposium']);
+
+        $this->getJson('/api/v1/conferences/suggestions?q=Quantum')
+            ->assertOk()
+            ->assertJsonCount(0, 'data');
+    }
+
     public function test_it_limits_results_to_five(): void
     {
         Conference::factory()->count(8)->create(['name' => 'Science Conference']);
