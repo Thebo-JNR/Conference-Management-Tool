@@ -22,6 +22,15 @@ class ConferenceSuggestionsTest extends TestCase
             ->assertJsonPath('data.0.name', 'Artificial Intelligence Summit');
     }
 
+    public function test_title_matching_is_case_insensitive(): void
+    {
+        Conference::factory()->create(['name' => 'Artificial Intelligence Summit']);
+
+        $this->getJson('/api/v1/conferences/suggestions?q=artificial')
+            ->assertOk()
+            ->assertJsonPath('data.0.name', 'Artificial Intelligence Summit');
+    }
+
     public function test_it_validates_short_queries(): void
     {
         $this->getJson('/api/v1/conferences/suggestions?q=a')
